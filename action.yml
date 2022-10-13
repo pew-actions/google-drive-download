@@ -1,0 +1,18 @@
+name: 'Download Google Drive file'
+description: 'Donwloads a file from Google Drive using service account credentials'
+inputs:
+  token:
+    description: 'Google access token'
+    required: true
+  file-id:
+    description: 'ID of the file in Google Drive'
+  file-url:
+    description: 'URL to the share link for the file on Google Drive'
+  path:
+    description: 'Path at which the file will be saved'
+    required: true
+
+runs:
+  using: node16
+  main: dist/index.js
+  post: dist/index.js

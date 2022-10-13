@@ -1,0 +1,18 @@
+{
+  "name": "action-google-drive-download",
+  "version": "1.0.0",
+  "description": "GitHub action to download a file from Google Drive",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc && ncc build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.5",
+    "@zeit/ncc": "^0.22.3",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "axios": "^1.1.2"
+  }
+}
