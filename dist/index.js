@@ -1139,6 +1139,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(__webpack_require__(747));
 const core = __importStar(__webpack_require__(470));
 const axios_1 = __importDefault(__webpack_require__(983));
+function parseFileIdFromURL(path) {
+    if (!path) {
+        return undefined;
+    }
+    // Ensure the file path matches a Google Drive path
+    const prefix = '/file/d/';
+    const suffix = '/view';
+    const urlPath = new URL(path).pathname;
+    if (!urlPath.startsWith(prefix) || !urlPath.endsWith(suffix)) {
+        core.error(`file-url path seems ill-formed: ${path})`);
+        return undefined;
+    }
+    // Strip the prefix/suffix to get the file id
+    const fileId = urlPath.slice(prefix.length, -suffix.length);
+    return fileId;
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         core.saveState('isPost', true);
@@ -1147,9 +1163,9 @@ function run() {
             core.setFailed('No access token provided to action');
             return;
         }
-        const fileId = core.getInput('file-id');
+        const fileId = core.getInput('file-id') || parseFileIdFromURL(core.getInput('file-url'));
         if (!fileId) {
-            core.setFailed('No file-id provided to action');
+            core.setFailed('Action could not determine file id');
             return;
         }
         const path = core.getInput('path');

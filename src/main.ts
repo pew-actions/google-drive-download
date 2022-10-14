@@ -3,6 +3,26 @@ import * as os from 'os'
 import * as core from '@actions/core'
 import axios, { ResponseType } from 'axios'
 
+function parseFileIdFromURL(path?: string) : string | undefined {
+  if (!path) {
+    return undefined
+  }
+
+  // Ensure the file path matches a Google Drive path
+  const prefix = '/file/d/'
+  const suffix = '/view'
+
+  const urlPath = new URL(path).pathname
+  if (!urlPath.startsWith(prefix) || !urlPath.endsWith(suffix)) {
+    core.error(`file-url path seems ill-formed: ${path})`)
+    return undefined
+  }
+
+  // Strip the prefix/suffix to get the file id
+  const fileId = urlPath.slice(prefix.length, -suffix.length)
+  return fileId
+}
+
 async function run() : Promise<void> {
 
   core.saveState('isPost', true)
@@ -13,9 +33,9 @@ async function run() : Promise<void> {
     return
   }
 
-  const fileId = core.getInput('file-id') || parseFileIdFromURL('file-url')
+  const fileId = core.getInput('file-id') || parseFileIdFromURL(core.getInput('file-url'))
   if (!fileId) {
-    core.setFailed('No file-id provided to action')
+    core.setFailed('Action could not determine file id')
     return
   }
 
