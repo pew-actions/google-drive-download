@@ -1203,7 +1203,7 @@ function post() {
         const path = core.getState('path');
         if (path && fs.existsSync(path)) {
             fs.rmSync(path);
-            core.notice(`Removed downloaded file ${path}`);
+            console.log(`Removed downloaded file ${path}`);
         }
     });
 }
